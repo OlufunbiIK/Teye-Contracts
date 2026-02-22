@@ -35,7 +35,7 @@ impl FhirContract {
     pub fn validate_patient(_env: Env, patient: Patient) -> bool {
         // Minimal validation logic: ID and name should not be empty.
         // In a real scenario, this would check against specific FHIR profiles.
-        patient.id.len() > 0 && patient.name.len() > 0
+        !patient.id.is_empty() && !patient.name.is_empty()
     }
 
     /// Creates a FHIR Observation resource.
@@ -64,8 +64,8 @@ impl FhirContract {
     /// Validates a FHIR Observation resource.
     pub fn validate_observation(_env: Env, observation: Observation) -> bool {
         // Minimal validation logic: must have an ID, code system, and subject
-        observation.id.len() > 0
-            && observation.code_system.len() > 0
-            && observation.subject_id.len() > 0
+        !observation.id.is_empty()
+            && !observation.code_system.is_empty()
+            && !observation.subject_id.is_empty()
     }
 }

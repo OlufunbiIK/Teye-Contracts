@@ -1,5 +1,3 @@
-#![cfg(test)]
-
 use crate::{CrossChainContract, CrossChainContractClient};
 use soroban_sdk::{testutils::Address as _, Address, Env, String};
 
@@ -20,7 +18,7 @@ fn test_add_relayer() {
     let env = Env::default();
     env.mock_all_auths();
 
-    let contract_id = env.register_contract(None, CrossChainContract);
+    let contract_id = env.register(CrossChainContract, ());
     let client = CrossChainContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
@@ -30,7 +28,7 @@ fn test_add_relayer() {
 
     // Admin adding relayer should succeed
     assert_eq!(client.add_relayer(&admin, &relayer), ());
-    assert_eq!(client.is_relayer(&relayer), true);
+    assert!(client.is_relayer(&relayer));
 
     // Non-admin should fail (already caught by mock_all_auths if it tries to auth as admin without permission,
     // but in reality we expect the require_auth() to pass if caller is simulated properly, and the admin check to fail).
@@ -41,7 +39,7 @@ fn test_map_identity() {
     let env = Env::default();
     env.mock_all_auths();
 
-    let contract_id = env.register_contract(None, CrossChainContract);
+    let contract_id = env.register(CrossChainContract, ());
     let client = CrossChainContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);

@@ -7,7 +7,7 @@ use soroban_sdk::{Env, String};
 #[test]
 fn test_patient_creation_and_validation() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, FhirContract);
+    let contract_id = env.register(FhirContract, ());
     let client = FhirContractClient::new(&env, &contract_id);
 
     let id = String::from_str(&env, "pat-123");
@@ -22,17 +22,17 @@ fn test_patient_creation_and_validation() {
     assert_eq!(patient.identifier, identifier);
     assert_eq!(patient.name, name);
     assert_eq!(patient.gender, gender);
-    assert_eq!(patient.active, true);
+    assert!(patient.active);
     assert_eq!(patient.birth_date, birth_date);
 
     let is_valid = client.validate_patient(&patient);
-    assert_eq!(is_valid, true);
+    assert!(is_valid);
 }
 
 #[test]
 fn test_observation_creation_and_validation() {
     let env = Env::default();
-    let contract_id = env.register_contract(None, FhirContract);
+    let contract_id = env.register(FhirContract, ());
     let client = FhirContractClient::new(&env, &contract_id);
 
     let id = String::from_str(&env, "obs-1");
@@ -62,5 +62,5 @@ fn test_observation_creation_and_validation() {
     assert_eq!(observation.effective_datetime, effective_datetime);
 
     let is_valid = client.validate_observation(&observation);
-    assert_eq!(is_valid, true);
+    assert!(is_valid);
 }
